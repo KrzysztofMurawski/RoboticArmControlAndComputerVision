@@ -98,27 +98,36 @@ class FabrikSolver:
 
 if __name__ == "__main__":
 
-    solver = FabrikSolver(0, 0)
+    solver = FabrikSolver(0, 50)
 
-    solver.add_segment(10, 5)
-    solver.add_segment(60, 5)
-    solver.add_segment(60, 2)
-
-
-    plt.xlim([-10, 10])
-    plt.ylim([-10, 10])
+    solver.add_segment(0, 150)
+    solver.add_segment(0, 150)
+    solver.add_segment(0, 50)
 
     for segment in solver.segments:
         plt.plot([segment.start_x,  segment.end_x], [segment.start_y,segment.end_y], marker = "o", c="b")
 
-    target = (2, 3)
+    target = (300, 0)
     accuracy = 0.001
-    while abs(target[0]-solver.segments[-1].end_x) > accuracy and abs(target[1]-solver.segments[-1].end_y) > accuracy:
-        solver.compute(*target)
 
+    i = 0
+    acc_arr = []
+    while math.sqrt((target[0]-solver.segments[-1].end_x)**2 + (target[1]-solver.segments[-1].end_y)**2) >= accuracy:
+        solver.compute(*target)
+        acc_arr.append(math.sqrt((target[0]-solver.segments[-1].end_x)**2 + (target[1]-solver.segments[-1].end_y)**2))
+        i += 1
+        if i == 100:
+            break
+
+    print(i, min(acc_arr))
+    print(acc_arr)
+    
+    plt.xlim([-400, 400])
+    plt.ylim([-10, 400])
+    
 
     for segment in solver.segments:
         plt.plot([segment.start_x,  segment.end_x], [segment.start_y,segment.end_y], marker = "o", c="r")
 
-    plt.plot(2, 3, c="g", marker="o")
+    plt.plot(*target, c="g", marker="o")
     plt.show()
